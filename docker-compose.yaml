@@ -1,0 +1,17 @@
+version: '3'
+services:
+  satisfactory-server:
+    container_name: 'satisfactory'
+    image: 'raykrueger/satisfactory-dedicated-server'
+    ports:
+      - '7777:7777/udp'
+      - '15000:15000/udp'
+      - '15777:15777/udp'
+    volumes:
+      - 'satisfactory-saves:/home/steam/.config/Epic/FactoryGame/Saved/SaveGames'
+    environment:
+      - NUMPLAYERS=4
+    restart: unless-stopped
+volumes:
+  satisfactory-saves:
+    driver: local
