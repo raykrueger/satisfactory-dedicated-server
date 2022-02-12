@@ -29,8 +29,6 @@ RUN mkdir -p /home/${USERNAME}/.config/Epic/FactoryGame/Saved/SaveGames \
     && chown -R ${USERID}:${USERID} /home/${USERNAME}/.config
 
 COPY config/ /tmp/config/
-RUN gomplate --input-dir /tmp/config --output-dir /game/FactoryGame/Saved/Config/LinuxServer/ \
-    && chown -R ${USERID}:${USERID} /game/FactoryGame/Saved
 
 COPY --chown=${USERID}:${USERID} start-server.sh /game/
 
