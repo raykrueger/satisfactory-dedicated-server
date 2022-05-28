@@ -48,3 +48,5 @@ There is a Make file for convience, you can use `make run` and `make shell` to
 test and tinker with how the container is built. The container itself uses
 [gomplate](https://docs.gomplate.ca/) and [gosu](https://github.com/tianon/gosu)
 interally for variable replacement and running in user context; respectively.
+
+This image was built with version v05.2.1, it will update on boot.
