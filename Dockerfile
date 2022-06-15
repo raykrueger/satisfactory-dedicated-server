@@ -9,6 +9,8 @@ RUN curl -L --silent -o /usr/local/bin/gomplate https://github.com/hairyhenderso
     && curl -L --silent -o /usr/local/bin/gosu https://github.com/tianon/gosu/releases/download/1.14/gosu-amd64 \
     && chmod +x /usr/local/bin/gosu
 
+ARG STEAMARGS=""
+
 ENV USERNAME=steam \
     USERID=1000 \
     SERVERBEACONPORT=15000 \
@@ -16,7 +18,7 @@ ENV USERNAME=steam \
     SERVERQUERYPORT=15777 \
     NUMPLAYERS=4 \
     CONNECTION_TIMEOUT=30 \
-    STEAMARGS=""
+    STEAMARGS=${STEAMARGS}
 
 RUN useradd -u ${USERID} -m ${USERNAME}
 
@@ -24,7 +26,7 @@ RUN mkdir /game && chown ${USERID}:${USERID} /game
 
 WORKDIR /game
 
-RUN gosu ${USERID}:${USERID} steamcmd +force_install_dir /game +login anonymous +app_update 1690800 +quit
+RUN gosu ${USERID}:${USERID} steamcmd +force_install_dir /game +login anonymous +app_update 1690800 ${STEAMARGS} +quit
 
 RUN mkdir -p /home/${USERNAME}/.config/Epic/FactoryGame/Saved/SaveGames \
     && chown -R ${USERID}:${USERID} /home/${USERNAME}/.config
