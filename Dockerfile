@@ -33,10 +33,8 @@ RUN mkdir -p /home/${USERNAME}/.config/Epic/FactoryGame/Saved/SaveGames \
 
 COPY config/ /tmp/config/
 
-COPY --chown=${USERID}:${USERID} start-server.sh /game/
+COPY --chown=${USERID}:${USERID} --chmod=0755 start-server.sh /game/
 
-RUN chmod +x /game/start-server.sh /game/Engine/Binaries/Linux/UE4Server-Linux-Shipping
-
-ENTRYPOINT ["./start-server.sh", "FactoryGame", "-NoSteamClient", "-unattended", "-log", "-Port=$SERVERGAMEPORT", "-BeaconPort=$SERVERBEACONPORT", "-ServerQueryPort=$SERVERQUERYPORT"]
+ENTRYPOINT ["./start-server.sh"]
 
 EXPOSE 7777/udp 15000/udp 15777/udp
