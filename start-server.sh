@@ -9,7 +9,7 @@ chown -R ${USERID}:${USERID} /game/FactoryGame/Saved
 echo "Updating game server"
 gosu $USERID:$USERID steamcmd +force_install_dir /game +login anonymous +app_update 1690800 $STEAMARGS +quit
 
-SERVERARGS="FactoryGame -NoSteamClient -unattended -log -Port=$SERVERGAMEPORT -BeaconPort=$SERVERBEACONPORT -ServerQueryPort=$SERVERQUERYPORT"
+SERVERARGS="FactoryGame -NoSteamClient -unattended -log -Port=$SERVERGAMEPORT -BeaconPort=$SERVERBEACONPORT -ServerQueryPort=$SERVERQUERYPORT -multihome=0.0.0.0"
 
 echo Starting server with SERVERARGS=$SERVERARGS
 
