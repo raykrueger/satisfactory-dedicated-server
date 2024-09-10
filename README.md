@@ -1,5 +1,7 @@
 # Satisfactory Dedicated Server Container
 
+Work in progress for 1.0!
+
 This is a container that runs the excellent
 [Satisfactory](https://www.satisfactorygame.com/) dedicated server so you can
 easily host it and play with friends and family. This container is designed to
