@@ -17,9 +17,4 @@ SERVERARGS="FactoryGame -NoSteamClient -unattended -log -Port=$SERVERGAMEPORT -B
 
 echo Starting server with SERVERARGS=$SERVERARGS
 
-# update 8 with Unreal 5 changed the server binary
-if [ -f /game/Engine/Binaries/Linux/UnrealServer-Linux-Shipping ]; then
-	gosu $USERID:$USERID "/game/Engine/Binaries/Linux/UnrealServer-Linux-Shipping" $SERVERARGS
-else
-	gosu $USERID:$USERID "/game/Engine/Binaries/Linux/UE4Server-Linux-Shipping" $SERVERARGS
-fi
+gosu $USERID:$USERID "/game/Engine/Binaries/Linux/FactoryServer-Linux-Shipping" $SERVERARGS
