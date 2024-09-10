@@ -27,14 +27,6 @@ jobs:
           push: true
           pull: true
           tags: raykrueger/satisfactory-dedicated-server:latest
-      - name: Build and Push Experimental
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          build-args: STEAMARGS=-beta experimental
-          push: true
-          pull: true
-          tags: raykrueger/satisfactory-dedicated-server:experimental
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v3
         with:
