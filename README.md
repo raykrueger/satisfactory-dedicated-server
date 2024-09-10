@@ -1,6 +1,6 @@
-# Satisfactory Dedicated Server Container
+# Satisfactory Dedicated Server Container for Docker
 
-Work in progress for 1.0!
+Works with 1.0!
 
 This is a container that runs the excellent
 [Satisfactory](https://www.satisfactorygame.com/) dedicated server so you can
