@@ -13,7 +13,7 @@ else
 	echo "Skipping game server update, set 'STEAMUPDATE=true' to enable"
 fi
 
-SERVERARGS="FactoryGame -NoSteamClient -unattended -log -Port=$SERVERGAMEPORT -BeaconPort=$SERVERBEACONPORT -ServerQueryPort=$SERVERQUERYPORT -multihome=0.0.0.0"
+SERVERARGS="FactoryGame -NoSteamClient -unattended -log -Port=$SERVERGAMEPORT"
 
 echo Starting server with SERVERARGS=$SERVERARGS
 
