@@ -12,7 +12,7 @@ RUN curl -L --silent -o /usr/local/bin/gomplate https://github.com/hairyhenderso
 ARG STEAMARGS=""
 
 ENV USERNAME=steam \
-    USERID=1000 \
+    USERID=1010 \
     SERVERBEACONPORT=15000 \
     SERVERGAMEPORT=7777 \
     SERVERQUERYPORT=15777 \
