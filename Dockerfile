@@ -34,6 +34,8 @@ COPY config/ /tmp/config/
 
 COPY --chown=${USERID}:${USERID} --chmod=0755 start-server.sh /game/
 
+STOPSIGNAL SIGINT
+
 ENTRYPOINT ["./start-server.sh"]
 
 EXPOSE 7777/udp
