@@ -31,17 +31,17 @@ chown so much?", that's why.
 
 Run once just temporarily to test...
 ```
-docker run --rm -it -p 7777:7777/udp -p 15777:15777/udp -p 15000:15000/udp raykrueger/satisfactory-dedicated-server
+docker run --rm -it -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
 ```
 
 Run with experimental...
 ```
-docker run --rm -it -e STEAMARGS='-beta experimental' -p 7777:7777/udp -p 15777:15777/udp -p 15000:15000/udp raykrueger/satisfactory-dedicated-server
+docker run --rm -it -e STEAMARGS='-beta experimental' -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
 ```
 
 Run locally with persistence...
 ```
-docker run -d -n satisfactory -v /home/steam/.config/Epic/FactoryGame/Saved/SaveGames -p 7777:7777/udp -p 15777:15777/udp -p 15000:15000/udp raykrueger/satisfactory-dedicated-server
+docker run -d -n satisfactory -v /home/steam/.config/Epic/FactoryGame/Saved/SaveGames -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
 ```
 
 To run with docker-compose grab the [docker-compose.yaml](docker-compose.yaml) file.
