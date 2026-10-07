@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - "main"
+  # Manual rebuild: gh workflow run ci --repo raykrueger/satisfactory-dedicated-server
+  workflow_dispatch:
 
 jobs:
   docker:
