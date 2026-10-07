@@ -1,0 +1,10 @@
+[Unit]
+Description=Start the Satisfactory dedicated server daily at 06:00
+
+[Timer]
+# Host local time. Change to taste (see systemd.time(7)).
+OnCalendar=*-*-* 06:00:00
+Unit=satisfactory.service
+
+[Install]
+WantedBy=timers.target
