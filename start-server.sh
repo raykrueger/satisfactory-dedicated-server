@@ -17,4 +17,7 @@ SERVERARGS="FactoryGame -NoSteamClient -unattended -log -Port=$SERVERGAMEPORT"
 
 echo Starting server with SERVERARGS=$SERVERARGS
 
-gosu $USERID:$USERID "/game/Engine/Binaries/Linux/FactoryServer-Linux-Shipping" $SERVERARGS
+# exec so the server replaces this script as PID 1 and receives the stop
+# signal (STOPSIGNAL SIGINT) directly; otherwise this shell swallows it and
+# docker stop has to kill the server after its timeout.
+exec gosu $USERID:$USERID "/game/Engine/Binaries/Linux/FactoryServer-Linux-Shipping" $SERVERARGS
