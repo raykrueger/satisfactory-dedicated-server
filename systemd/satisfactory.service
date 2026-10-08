@@ -1,0 +1,26 @@
+[Unit]
+Description=Satisfactory dedicated server (Docker)
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Clear any leftover container from a crash or an old docker-run start.
+ExecStartPre=-/usr/bin/docker rm -f satisfactory
+# Adjust to taste:
+#   -v <host dir>:...SaveGames   where save games live on the host (create it first)
+#   -p ...                       the game's default ports; change both sides to remap
+#   STEAMUPDATE=true             update the game server on every start
+ExecStart=/usr/bin/docker run --rm --name satisfactory --pull always \
+  -p 8888:8888/tcp -p 7777:7777/tcp -p 7777:7777/udp \
+  -e STEAMUPDATE=true \
+  -v /var/lib/satisfactory/data:/home/steam/.config/Epic/FactoryGame/Saved/SaveGames \
+  raykrueger/satisfactory-dedicated-server
+# Give the server time to save before Docker kills it (default is 10s).
+ExecStop=/usr/bin/docker stop -t 60 satisfactory
+TimeoutStopSec=90
+# 130 = clean exit on SIGINT (the image stop signal), 143 = SIGTERM.
+SuccessExitStatus=130 143
+Restart=on-failure
+RestartSec=30

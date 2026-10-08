@@ -1,0 +1,10 @@
+[Unit]
+Description=Stop the Satisfactory dedicated server daily at midnight
+
+[Timer]
+# Host local time. Change to taste (see systemd.time(7)).
+OnCalendar=*-*-* 00:00:00
+Unit=satisfactory-stop.service
+
+[Install]
+WantedBy=timers.target

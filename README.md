@@ -85,6 +85,45 @@ By default the container starts the game exactly as baked into the image (the
 - If your server is ever behind the client version, restart it (or bump the
   image).
 
+## Running with systemd
+
+The [systemd/](systemd) directory has units that run the container under
+systemd, with optional timers that start it in the morning and stop it at
+night:
+
+- `satisfactory.service` runs the container in the foreground (`--rm`,
+  `--pull always`, all three ports, saves at `/var/lib/satisfactory/data`),
+  stops it with SIGINT so the server saves and exits cleanly, and restarts
+  it if it crashes.
+- `satisfactory-start.timer` / `satisfactory-stop.timer` start it at 06:00
+  and stop it at midnight (host local time) via
+  `satisfactory-stop.service`.
+
+Adjust the save path, ports, and schedule in the units to taste, then:
+
+```bash
+sudo mkdir -p /var/lib/satisfactory/data
+sudo cp systemd/* /etc/systemd/system/
+sudo systemctl daemon-reload
+```
+
+Run on demand:
+
+```bash
+sudo systemctl start satisfactory
+sudo systemctl stop satisfactory
+```
+
+Turn the daily schedule on / off:
+
+```bash
+sudo systemctl enable --now satisfactory-start.timer satisfactory-stop.timer
+sudo systemctl disable --now satisfactory-start.timer satisfactory-stop.timer
+```
+
+Logs: `journalctl -u satisfactory`.
+
+
 ## Development
 
 A [Makefile](Makefile) is included for testing and tinkering:

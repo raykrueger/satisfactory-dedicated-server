@@ -1,0 +1,6 @@
+[Unit]
+Description=Stop the Satisfactory dedicated server (scheduled)
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl stop satisfactory.service
