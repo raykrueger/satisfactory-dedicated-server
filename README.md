@@ -1,59 +1,94 @@
 # Satisfactory Dedicated Server Container for Docker
 
-Works with 1.0!
+Run [Satisfactory](https://www.satisfactorygame.com/) on your own machine so
+you, your friends, and your family can play together.
 
-This is a container that runs the excellent
-[Satisfactory](https://www.satisfactorygame.com/) dedicated server so you can
-easily host it and play with friends and family. This container is designed to
-run the game server, and that is it. All other aspects of backups and
-persistence are expected to be performed outside if the container using mounted
+This container runs the Satisfactory dedicated server and nothing else. The
+game is pre-installed, and all other concerns — backups, persistence,
+monitoring — are expected to be handled outside the container with mounted
 volumes.
 
-The game is pre-installed in the container, but will always update to the latest version at launch. If your server is ever behind the client, just restart the container.
+## Ports
 
-I do not make any symlinks for where the saved games go. This way I don't have
-to maintain that location, I'm lazy. Saves are stored at
-`/home/steam/.config/Epic/FactoryGame/Saved/SaveGames`, inside the container.
+The server requires inbound **UDP** on ports **7777** (game), **15777**, and
+**15000** (Steam query/relay). The examples below map 7777; open the others in
+your firewall or router if clients can't find your server.
 
-The Satisfactory dedicated server requires the following ports open for inbound
-traffic, 7777, 15777, 15000 all UDP. The examples below map those exposed ports
-as required.
+## Quick start
 
-Please note that the game itself is pre-release, the dedidcate server comes with
-*many* in game warnings about it being buggy. It is also kind of a beast, in the
-late game you'll easily need over 8gb of ram.
+Temporary test run (the server starts immediately and runs until you Ctrl-C):
 
-Finally, this game runs as the *steam* user internally, rather than root. If you
-look at the Dockerfile and start-serer.sh and wonder "Why is this guy using
-chown so much?", that's why.
-
-## Run it
-
-Run once just temporarily to test...
-```
+```bash
 docker run --rm -it -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
 ```
 
-Run with experimental...
-```
-docker run --rm -it -e STEAMARGS='-beta experimental' -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
+Running with docker-compose:
+
+```bash
+# grab the docker-compose.yaml from this repo, then:
+docker compose up -d
 ```
 
-Run locally with persistence...
-```
-docker run -d -n satisfactory -v /home/steam/.config/Epic/FactoryGame/Saved/SaveGames -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
+### Persistence
+
+Saves live at `/home/steam/.config/Epic/FactoryGame/Saved/SaveGames` inside
+the container. Mount a volume (or bind mount) there and nothing is ever lost
+when the container is recreated:
+
+```bash
+docker run -d \
+  -v satisfactory-saves:/home/steam/.config/Epic/FactoryGame/Saved/SaveGames \
+  -p 7777:7777/udp \
+  raykrueger/satisfactory-dedicated-server
 ```
 
-To run with docker-compose grab the [docker-compose.yaml](docker-compose.yaml) file.
-```
-docker-compose start #that's it
-```
+The server keeps 3 rotating autosaves in that directory.
+
+## Configuration
+
+All options are environment variables:
+
+| Variable             | Default | Description                                                    |
+| -------------------- | ------- | -------------------------------------------------------------- |
+| `SERVERGAMEPORT`     | `7777`  | UDP port the game listens on                                   |
+| `NUMPLAYERS`         | `4`     | Maximum players (rendered into `Game.ini`)                     |
+| `CONNECTION_TIMEOUT` | `30`    | Connection timeout in seconds (rendered into `Engine.ini`)     |
+| `STEAMUPDATE`        | _(empty)_ | Set to `true` to run `steamcmd` and update the game at boot |
+| `STEAMARGS`          | _(empty)_ | Extra steamcmd args, e.g. `-beta experimental` (only used when `STEAMUPDATE=true`) |
+| `USERNAME` / `USERID` | `steam` / `1010` | User the server process runs as |
+
+At boot, [gomplate](https://docs.gomplate.ca/) renders the template files in
+[`config/`](config) into the server's config directory, so `NUMPLAYERS` and
+`CONNECTION_TIMEOUT` take effect without touching game files.
+
+### Updating the game
+
+By default the container starts the game exactly as baked into the image (the
+`latest` tag is rebuilt nightly). Set `STEAMUPDATE=true` to force a
+`steamcmd` update at boot, or simply pull the new image.
+
+## Good to know
+
+- The server runs as the non-root `steam` user, not root.
+- The game is pre-release; Epic ships the dedicated server with in-game
+  warnings about its state. Late-game factories are heavy — plan on 8 GB+ of
+  RAM for a busy save.
+- If your server is ever behind the client version, restart it (or bump the
+  image).
 
 ## Development
 
-There is a Make file for convience, you can use `make run` and `make shell` to
-test and tinker with how the container is built. The container itself uses
-[gomplate](https://docs.gomplate.ca/) and [gosu](https://github.com/tianon/gosu)
-interally for variable replacement and running in user context; respectively.
+A [Makefile](Makefile) is included for testing and tinkering:
 
-This image was built with version v05.2.1, it will update on boot.
+```bash
+make run    # build and run the container
+make shell  # build and drop into a bash shell in the container
+```
+
+The container uses [gomplate](https://docs.gomplate.ca/) for config variable
+replacement and [gosu](https://github.com/tianon/gosu) to drop privileges to
+the `steam` user at runtime.
+
+## License
+
+[Apache License 2.0](LICENSE)
