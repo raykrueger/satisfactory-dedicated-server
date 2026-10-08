@@ -10,15 +10,25 @@ volumes.
 
 ## Ports
 
-The image exposes **7777** (UDP and TCP). The examples below map
-`7777/udp`, which is what the game listens on.
+The server needs three inbound bindings, and the image exposes all of them:
+
+| Port | Protocol | Usage |
+| ---- | -------- | ----- |
+| `7777` | UDP | Game traffic, Lightweight Query API |
+| `7777` | TCP | Server traffic, HTTPS API |
+| `8888` | TCP | Reliable messaging (required as of patch 1.1.0.0) |
+
+The examples below map all three; without `8888/tcp` players can connect but
+get stuck on the loading screen. If you change `SERVERGAMEPORT`, only the
+`7777` pair moves — the reliable port stays `8888`.
 
 ## Quick start
 
 Temporary test run (the server starts immediately and runs until you Ctrl-C):
 
 ```bash
-docker run --rm -it -p 7777:7777/udp raykrueger/satisfactory-dedicated-server
+docker run --rm -it -p 7777:7777/udp -p 7777:7777/tcp -p 8888:8888/tcp \
+  raykrueger/satisfactory-dedicated-server
 ```
 
 Running with docker-compose:
@@ -37,7 +47,7 @@ when the container is recreated:
 ```bash
 docker run -d \
   -v satisfactory-saves:/home/steam/.config/Epic/FactoryGame/Saved/SaveGames \
-  -p 7777:7777/udp \
+  -p 7777:7777/udp -p 7777:7777/tcp -p 8888:8888/tcp \
   raykrueger/satisfactory-dedicated-server
 ```
 
@@ -49,11 +59,11 @@ All options are environment variables:
 
 | Variable             | Default | Description                                                    |
 | -------------------- | ------- | -------------------------------------------------------------- |
-| `SERVERGAMEPORT`     | `7777`  | UDP port the game listens on                                   |
+| `SERVERGAMEPORT`     | `7777`  | Port the game listens on (UDP and TCP; the reliable port is always `8888/tcp`) |
 | `NUMPLAYERS`         | `4`     | Maximum players (rendered into `Game.ini`)                     |
 | `CONNECTION_TIMEOUT` | `30`    | Connection timeout in seconds (rendered into `Engine.ini`)     |
 | `STEAMUPDATE`        | _(empty)_ | Set to `true` to run `steamcmd` and update the game at boot |
-| `STEAMARGS`          | _(empty)_ | Extra steamcmd args, e.g. `-beta experimental` (only used when `STEAMUPDATE=true`) |
+| `STEAMARGS`          | _(empty)_ | Extra steamcmd args, e.g. `-beta <branch>` (only used when `STEAMUPDATE=true`) |
 | `USERNAME` / `USERID` | `steam` / `1010` | User the server process runs as |
 
 At boot, [gomplate](https://docs.gomplate.ca/) renders the template files in

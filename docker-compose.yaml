@@ -5,6 +5,8 @@ services:
     image: 'raykrueger/satisfactory-dedicated-server'
     ports:
       - '7777:7777/udp'
+      - '7777:7777/tcp'
+      - '8888:8888/tcp'
     volumes:
       - 'satisfactory-saves:/home/steam/.config/Epic/FactoryGame/Saved/SaveGames'
     environment:

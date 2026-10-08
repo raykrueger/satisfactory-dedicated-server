@@ -40,3 +40,4 @@ ENTRYPOINT ["./start-server.sh"]
 
 EXPOSE 7777/udp
 EXPOSE 7777/tcp
+EXPOSE 8888/tcp
