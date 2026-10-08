@@ -10,9 +10,8 @@ volumes.
 
 ## Ports
 
-The server requires inbound **UDP** on ports **7777** (game), **15777**, and
-**15000** (Steam query/relay). The examples below map 7777; open the others in
-your firewall or router if clients can't find your server.
+The image exposes **7777** (UDP and TCP). The examples below map
+`7777/udp`, which is what the game listens on.
 
 ## Quick start
 
